@@ -4,35 +4,25 @@
   become: true
 
   tasks:
-    - name: Check if swap file exists
-      stat:
-        path: /swapfile
-      register: swapfile_status
-
     - name: Create swap file if not exists
       command: fallocate -l 4G /swapfile
       args:
         creates: /swapfile
-      when: not swapfile_status.stat.exists
 
     - name: Set permissions on swap file
       command: chmod 600 /swapfile
-      when: not swapfile_status.stat.exists
 
     - name: Make swap space
       command: mkswap /swapfile
-      when: not swapfile_status.stat.exists
 
     - name: Enable swap
       command: swapon /swapfile
       args:
         creates: /swapfile
-      when: not swapfile_status.stat.exists
 
     - name: Add swap entry to fstab
       lineinfile:
         path: /etc/fstab
         line: '/swapfile none swap sw 0 0'
         state: present
-      when: not swapfile_status.stat.exists
 
