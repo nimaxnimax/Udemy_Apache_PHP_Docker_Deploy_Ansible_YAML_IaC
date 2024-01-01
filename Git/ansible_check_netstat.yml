@@ -1,0 +1,13 @@
+---
+- name: Execute netstat on webservers
+  hosts: webservers
+  gather_facts: true
+  tasks:
+    - name: Run netstat command
+      become: true
+      shell: netstat -tupln
+      register: netstat_output
+
+    - name: Display netstat results
+      debug:
+        var: netstat_output.stdout_lines
