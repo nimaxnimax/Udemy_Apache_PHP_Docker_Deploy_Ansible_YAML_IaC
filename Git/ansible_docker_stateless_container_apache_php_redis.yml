@@ -76,7 +76,7 @@
 
     - name: Display Message >> Webserver >> ubuntu1 & ubuntu2
       debug:
-        msg: "Webserver >> http://{{ ansible_default_ipv4.address }}:8080"
+        msg: "Webserver >> http://{{ ansible_default_ipv4.address }}:80"
       when: inventory_hostname == 'ubuntu1' or inventory_hostname == 'ubuntu2'
 
     - name: Display Message >> Redis Database >> ubuntu2
