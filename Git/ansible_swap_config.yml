@@ -5,22 +5,27 @@
 
   tasks:
     - name: Create swap file if not exists
+      become: true
       command: fallocate -l 4G /swapfile
       args:
         creates: /swapfile
 
     - name: Set permissions on swap file
+      become: true
       command: chmod 600 /swapfile
 
     - name: Make swap space
+      become: true
       command: mkswap /swapfile
 
     - name: Enable swap
+      become: true
       command: swapon /swapfile
       args:
         creates: /swapfile
 
     - name: Add swap entry to fstab
+      become: true
       lineinfile:
         path: /etc/fstab
         line: '/swapfile none swap sw 0 0'
