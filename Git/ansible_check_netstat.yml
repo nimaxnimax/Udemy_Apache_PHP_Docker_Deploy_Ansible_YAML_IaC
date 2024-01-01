@@ -5,7 +5,7 @@
   tasks:
     - name: Run netstat command
       become: true
-      shell: netstat -tupln
+      command: netstat -tupln
       register: netstat_output
 
     - name: Display netstat results
