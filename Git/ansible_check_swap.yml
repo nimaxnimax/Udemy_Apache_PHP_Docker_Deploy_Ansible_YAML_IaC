@@ -1,0 +1,15 @@
+---
+- name: Check swap on webservers
+  hosts: webservers
+  become: yes
+  
+  tasks:
+    - name: Run command
+      become: true
+      command: free -h
+      register: zoutput
+
+    - name: Display results
+      debug:
+        var: zoutput.stdout_lines
+
