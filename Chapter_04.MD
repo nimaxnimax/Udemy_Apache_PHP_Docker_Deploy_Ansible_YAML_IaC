@@ -1,3 +1,6 @@
+![Alt text](image-3.png)
+
+
 What is Apache and PHP and Why deploy on Docker?
 
 **Apache:**

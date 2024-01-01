@@ -1,3 +1,6 @@
+![Alt text](image-1.png)
+
+
 What is IaC and Ansible YAML?
 
 Infrastructure as Code (IaC) is a methodology that involves managing and provisioning computing infrastructure through machine-readable script files, rather than physical hardware configuration or interactive configuration tools. IaC allows IT teams to define, version, and automate the deployment and configuration of infrastructure components using code. This approach enhances consistency, repeatability, and collaboration while reducing manual errors.

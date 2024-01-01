@@ -1,3 +1,6 @@
+![Alt text](image-2.png)
+
+
 What is Docker and What are the advantages of deploying infrastructure using Ansible on Cloud servers on Docker?
 
 **Docker:**
