@@ -1,17 +1,19 @@
 ---
 - name: Execute netstat on webservers
   hosts: webservers
-  gather_facts: true
+  become: yes
+  
   tasks:
-    - name: Update package cache
-      package:
-        name: '*'
-        state: latest
+    - name: Update Package Cache
+      apt:
+        update_cache: yes
 
-    - name: Install net-tools
-      package:
-        name: net-tools
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
         state: present
+      loop:
+        - net-tools
 
     - name: Run netstat command
       become: true
