@@ -1,0 +1,77 @@
+---
+- name: Docker Deploy
+  hosts: webservers
+  become: yes
+  
+  tasks: 
+    - name: Remove the file
+      file:
+        path: /usr/share/keyrings/docker-archive-keyring.gpg
+        state: absent
+
+    - name: Remove the file
+      file:
+        path: /etc/apt/sources.list.d/docker.list
+        state: absent
+
+    - name: Update Package Cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+        - gpg
+
+    - name: Download Docker GPG Key
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /tmp/docker-archive-keyring.gpg
+
+    - name: Install Docker GPG Key
+      command: gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg /tmp/docker-archive-keyring.gpg
+
+    - name: Add Docker Repository
+      shell: echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    - name: Update Package Cache
+      apt:
+        update_cache: yes
+
+    - name: Install Docker CE, Docker CE CLI, Containerd.io, and Docker Compose
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose
+        state: present
+
+    - name: Enable Docker service
+      ansible.builtin.service:
+        name: docker
+        enabled: yes
+
+    - name: Start Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+
+    - name: Run hello-world Docker container for test
+      ansible.builtin.command: docker run hello-world
+  
+    - name: Get Docker Status
+      ansible.builtin.shell: docker ps -a
+      register: command_result_output
+
+    - name: Display Docker Status
+      debug:
+        var: command_result_output.stdout_lines
+
