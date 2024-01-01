@@ -1,0 +1,86 @@
+---
+- name: Docker Stateless Container - Web Deploy
+  hosts: webservers
+  become: yes
+  
+  tasks:
+    - name: Gather information about Docker containers
+      command: docker ps -aq
+      register: docker_container_ids
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Stop and remove Docker containers
+      docker_container:
+        name: "{{ item }}"
+        state: absent
+      loop: "{{ docker_container_ids.stdout_lines }}"
+
+    - name: Uninstall UFW
+      ansible.builtin.apt:
+        name: ufw
+        state: absent
+
+    - name: Create Directory
+      file:
+        path: /home/website1/
+        state: directory
+        mode: '0755'
+
+    - name: Copy Dockerfile Configuration File
+      copy:
+        src: web1_dockerfile.conf.j2
+        dest: /home/website1/Dockerfile
+        mode: '0644'
+
+    - name: Copy Template File >> index.php
+      template:
+        src: web1_index_php_conf.j2
+        dest: /home/website1/index.php
+        mode: '0644'
+
+    - name: Build Custom Docker Image >> my-php:7.4-apache >> ubuntu1 & ubuntu2 Task
+      command: docker build -t my-php:7.4-apache /home/website1
+      when: inventory_hostname == 'ubuntu1' or inventory_hostname == 'ubuntu2'
+
+    - name: Delete temp folder /home/website1/
+      file:
+        path: /home/website1/
+        state: absent
+
+    - name: Run Custom PHP 7.4 Docker Container >> ubuntu1 & ubuntu2 Task
+      docker_container:
+        name: my-php-container
+        image: my-php:7.4-apache
+        ports:
+          - "80:80"
+        detach: yes
+      when: inventory_hostname == 'ubuntu1' or inventory_hostname == 'ubuntu2'
+
+    - name: Run Redis Docker Container >> ubuntu2 Task
+      docker_container:
+        name: redis-container
+        image: redis:latest
+        ports:
+          - "6379:6379"
+        detach: yes
+      when: inventory_hostname == 'ubuntu2'
+
+    - name: Run Docker ps -a
+      command: docker ps -a
+      register: docker_ps_result
+
+    - name: Display Docker ps -a Result
+      debug:
+        var: docker_ps_result.stdout_lines
+
+    - name: Display Message >> Webserver >> ubuntu1 & ubuntu2
+      debug:
+        msg: "Webserver >> http://{{ ansible_default_ipv4.address }}:8080"
+      when: inventory_hostname == 'ubuntu1' or inventory_hostname == 'ubuntu2'
+
+    - name: Display Message >> Redis Database >> ubuntu2
+      debug:
+        msg: "Redis Database >> {{ ansible_default_ipv4.address }}"
+      when: inventory_hostname == 'ubuntu2'
+

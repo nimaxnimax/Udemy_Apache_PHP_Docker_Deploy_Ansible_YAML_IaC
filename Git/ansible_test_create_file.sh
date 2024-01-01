@@ -1,1 +1,1 @@
-ansible-playbook -i ansible_hosts ansible_test_create_file.yml
+ansible-playbook -i ansible_hosts.ini ansible_test_create_file.yml
