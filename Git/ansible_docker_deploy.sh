@@ -1,2 +1,2 @@
 
-ansible-playbook -i ansible_hosts.ini ansible_docker_deploy.yml
+ansible-playbook -i ansible_hosts ansible_docker_deploy.yml
