@@ -1,0 +1,9 @@
+---
+- name: Create File
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Create File
+      file:
+        path: /test.txt
+        state: touch
