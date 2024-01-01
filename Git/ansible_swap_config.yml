@@ -7,8 +7,6 @@
     - name: Create swap file if not exists
       become: true
       command: fallocate -l 4G /swapfile
-      args:
-        creates: /swapfile
 
     - name: Set permissions on swap file
       become: true
@@ -21,8 +19,6 @@
     - name: Enable swap
       become: true
       command: swapon /swapfile
-      args:
-        creates: /swapfile
 
     - name: Add swap entry to fstab
       become: true
