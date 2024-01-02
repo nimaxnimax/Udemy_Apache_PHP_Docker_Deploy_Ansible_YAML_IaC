@@ -16,7 +16,7 @@ cat ansible_docker_stateless_container_apache_php_redis.yml
 ```
 
 ```bash
-ansible-playbook -i ansible_docker_stateless_container_apache_php_redis.yml
+ansible-playbook -i ansible_hosts.ini ansible_docker_stateless_container_apache_php_redis.yml
 ```
 
 Verify Ubuntu Hosts >> Test URLs/IPs
