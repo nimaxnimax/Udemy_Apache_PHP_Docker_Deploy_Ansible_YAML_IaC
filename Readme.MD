@@ -16,5 +16,3 @@ Topics:
 - Docker Installation and Deployment on Webservers using Ansible YAML IaC
 - Docker Container Deployment - Apache PHP Web and Redis Deploy using Ansible IaC - Automation Lab
 - Apache PHP Redis Deployment using Docker and Ansible IaC Automation - Testing on 3 More Cloud VMs
-- Ansible IaC Automation Test - PC VMware Player (VM) Test Lab - How to Install and Test on Personal Computer?!
-
